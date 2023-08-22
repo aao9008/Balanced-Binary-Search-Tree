@@ -18,21 +18,28 @@ class Tree
 
   # Create a BST and return root node of tree
   def build_tree(arr)
-
+    # Base Case: return if array/subarray is empty
     if arr.empty? then return end
 
+    # Find middle indes, data value of middle index will be our root 
     mid = arr.length / 2 
-
+    
+    # Create node object where value at middle of ordered array is the root
     root = Node.new(arr[mid])
 
+    # Create two subarrays, one on the left and another on the right of current array midpoint
+    # Use recursion to buld left side of tree
     root.left = build_tree(arr[0 ... mid])
 
+    # Use recursion to build right side of tree
     root.right = build_tree(arr[mid + 1 .. -1])
-
+    
+    # Return root of given level
     return root
     
   end
 
+  # Will print out binary tree structure in the command terminal 
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
