@@ -70,6 +70,7 @@ class Tree
     return root
   end
 
+  # Function will remove node that contains the passed value
   def delete(root = @root, value)
     # Basecase: Value is not in BST
     return root if root == nil
@@ -118,6 +119,17 @@ class Tree
       return root 
     end
   end
+
+  #Return node with the given value
+  def find(value, root = @root)
+    # Node with given value does not exist, return nil
+    return nil if root.nil?
+    # Node with given value has been found, return the node
+    return root if root.data == value
+    # Traverse tree looking for node with given value
+    value < root.data ? find(value, root.left) : find(value, root.right)
+  end
+
 end 
 
 
@@ -127,8 +139,6 @@ tree = Tree.new(arr)
 
 tree.pretty_print
 
-tree.delete(30)
-
-tree.pretty_print
+p tree.find(70)
 
 
