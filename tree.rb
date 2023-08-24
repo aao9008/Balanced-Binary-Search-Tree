@@ -45,9 +45,90 @@ class Tree
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
+
+  def insert(root = @root, value)
+    # Base Case: reach a leaf node (root node has value of nil for left or right)
+    if root == nil
+      return Node.new(value)
+    end
+
+    # Compare insert value to value of the tree root.
+    direction = @root.<=>(value)
+
+    # Insertion value already exists in the tree
+    if direction == 0
+      return root
+    # If comparble method return 1, continue traversing to the left side. 
+    elsif direction == 1
+      root.left = insert(root.left, value)
+    # If comparble method returns -1, continue traversing to the right side.
+    elsif direction == -1
+      root.right = insert(root.right, value)
+    end 
+    
+    # Return root to previous level (Root of current level is child of previous level)
+    return root
+  end
+
+  def delete(root = @root, value)
+    # Basecase: Value is not in BST
+    return root if root == nil
+
+    # If value is greater than node value, continue to right side of tree
+    if root.data < value
+      root.right = delete(root.right, value)
+      return root
+    # If value is less than node value, continue to the left side of tree
+    elsif root.data > value
+      root.left = delete(root.left, value)
+      return root
+    end
+
+    # Node to be deleted has been found in other words root.data == value
+
+    # If at least one of the children is nil 
+    if root.left == nil
+      temp = root.right
+      return temp
+    elsif root.right == nil
+      temp = root.left
+      return temp
+    # Both children exist
+    else
+      parent_succ = root
+      succ = parent_succ.right
+      
+      until succ.left == nil
+        parent_succ = succ
+        succ = succ.left
+      end
+
+      # Edge case: lowest value is right childe of node to be deleted
+      if root == parent_succ
+        parent_succ.right = succ.right
+      # For all other cases
+      else 
+        parent_succ.left = succ.right
+      end
+
+      # Copy successor data to node to deleted
+      root.data = succ.data
+
+      # Return root
+      return root 
+    end
+  end
 end 
 
 
-arr = [3,4,5,2,1,6,7,8,9]
+arr = [20,30,40,50,60,70,80]
 
-p Tree.new(arr).pretty_print
+tree = Tree.new(arr)
+
+tree.pretty_print
+
+tree.delete(30)
+
+tree.pretty_print
+
+
