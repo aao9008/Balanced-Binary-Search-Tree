@@ -130,6 +130,68 @@ class Tree
     value < root.data ? find(value, root.left) : find(value, root.right)
   end
 
+  # Returns number of edeges from given node to tree root
+  def depth(node)
+    # Start at tree root
+    current_node = @root
+    # Count number of edges
+    count = 0
+    # Traverse tree until given node is found or no nodes are left
+    until current_node.<=>(node) == 0 || current_node == nil
+      count += 1
+      if current_node.<=>(node) == -1
+        current_node = current_node.right
+      elsif current_node.<=>(node) == 1
+        current_node = current_node.left
+      end
+    end
+    # Return edges count or nil if node is nil
+    current_node.nil? ? nil : count
+  end
+
+  def level_order(root = @root)
+    return if root.nil?
+
+    # Queue array will be used for traversel
+    queue = []
+    # Ouptput array will return all values traversed
+    output = []
+
+    # Push current root into queue
+    queue.push(root)
+
+    until queue.empty?
+      # 'Visit' discovered node (FIFO)
+      current = queue.shift
+
+      # Check if block is given yeild node, else push node value
+      output.push(block_given? ? yield(current) : current.data)
+
+      # Push left child to queue if not empty
+      queue.push(current.left) if current.left
+      # Push right child to queue if not empty
+      queue.push(current.right) if current.right
+    end
+
+    # Return output array
+    return output
+  end
+
+  def level_order_recursive(root = @root, queue = [], output = [], &block)
+    # Check if block is given yeild node, else push node value
+    output.push(block_given? ? yield(root) : root.data)
+
+    # Push left child to queue if not empty
+    queue.push(root.left) if root.left
+    # Push right child to queue if not empty
+    queue.push(root.right) if root.right
+
+    # Base case
+    return output if queue.empty?
+
+    # 'Visit' new root
+    level_order_recursive(queue.shift, queue, output, &block)
+  end
 end 
 
 
@@ -139,6 +201,8 @@ tree = Tree.new(arr)
 
 tree.pretty_print
 
-p tree.find(70)
+r = Proc.new {|node| node.data * 2}
+
+p tree.level_order_recursive(&r)
 
 
