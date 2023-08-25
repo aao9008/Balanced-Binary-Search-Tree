@@ -233,6 +233,26 @@ class Tree
     # Function has return to root, tree has been traversed
     return output 
   end 
+
+  # Depth first search
+  def postorder(root = @root, output = [], &block)
+    # Base case
+    return if root.nil?
+
+    # Traverse left side
+    postorder(root.left, output, &block)
+
+    # Traverse right side
+    postorder(root.right, output, &block)
+
+    # Yield root if block is given
+    if block_given? then yield(root)end
+    # Push value to array
+    output.push(root.data)
+
+    # Function has return to root, tree has been traversed
+    return output 
+  end 
 end 
 
 
@@ -244,6 +264,6 @@ tree.pretty_print
 
 r = Proc.new {|node| node.data * 2}
 
-p = tree.preorder{ |root| puts root.data}
+p = tree.postorder{ |root| puts root.data}
 p p
 
