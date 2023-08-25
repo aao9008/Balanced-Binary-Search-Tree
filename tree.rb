@@ -211,12 +211,32 @@ class Tree
     inorder(root.right, output, &block)
 
     # Function has return to root, tree has been traversed
-    return output if root == @root
+    return output 
+  end 
+
+  # Depth first search
+  def preorder(root = @root, output = [], &block)
+    # Base case
+    return if root.nil?
+
+    # Yield root if block is given
+    if block_given? then yield(root)end
+    # Push value to array
+    output.push(root.data)
+
+    # Traverse left side
+    preorder(root.left, output, &block)
+
+    # Traverse right side
+    preorder(root.right, output, &block)
+
+    # Function has return to root, tree has been traversed
+    return output 
   end 
 end 
 
 
-arr = [20,30,40,50,60,70,80,90]
+arr = [20,30,40,50,60,70,80]
 
 tree = Tree.new(arr)
 
@@ -224,6 +244,6 @@ tree.pretty_print
 
 r = Proc.new {|node| node.data * 2}
 
-p = tree.inorder{ |root| puts root.data}
+p = tree.preorder{ |root| puts root.data}
 p p
 
