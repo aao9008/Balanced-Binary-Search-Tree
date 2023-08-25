@@ -177,6 +177,7 @@ class Tree
     return output
   end
 
+  # Breadth level traversal of tree
   def level_order_recursive(root = @root, queue = [], output = [], &block)
     # Check if block is given yeild node, else push node value
     output.push(block_given? ? yield(root) : root.data)
@@ -192,10 +193,30 @@ class Tree
     # 'Visit' new root
     level_order_recursive(queue.shift, queue, output, &block)
   end
+
+  # Depth first search
+  def inorder(root = @root, output = [], &block)
+    # Base case
+    return if root.nil?
+
+    # Traverse left side
+    inorder(root.left, output, &block)
+
+    # Yield root if block is given
+    if block_given? then yield(root)end
+    # Push value to array
+    output.push(root.data)
+
+    # Traverse right side
+    inorder(root.right, output, &block)
+
+    # Function has return to root, tree has been traversed
+    return output if root == @root
+  end 
 end 
 
 
-arr = [20,30,40,50,60,70,80]
+arr = [20,30,40,50,60,70,80,90]
 
 tree = Tree.new(arr)
 
@@ -203,6 +224,6 @@ tree.pretty_print
 
 r = Proc.new {|node| node.data * 2}
 
-p tree.level_order_recursive(&r)
-
+p = tree.inorder{ |root| puts root.data}
+p p
 
