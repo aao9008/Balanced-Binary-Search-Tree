@@ -290,18 +290,3 @@ class Tree
     @root = build_tree(data)
   end 
 end 
-
-
-arr = [20,30,40,50,60,70,80,90]
-
-tree = Tree.new(arr)
-
-tree.insert(10)
-
-tree.pretty_print
-
-tree.rebalance
-
-tree.pretty_print
-
-p tree.balanced?
