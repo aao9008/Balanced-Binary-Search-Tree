@@ -1,5 +1,5 @@
-require_relative 'node'
-require_relative 'tree'
+require_relative 'lib/node'
+require_relative 'lib/tree'
 
 # Create tree with 15 random elements with values between 1-100
 tree = Tree.new(Array.new(15) {rand(1..100)})
