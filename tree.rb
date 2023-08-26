@@ -1,5 +1,3 @@
-require_relative 'node'
-
 class Tree
   attr_accessor :root
 
@@ -125,7 +123,7 @@ class Tree
     # Node with given value does not exist, return nil
     return nil if root.nil?
     # Node with given value has been found, return the node
-    return root if root.<=>(value) == 0
+    return root if root.data == value
     # Traverse tree looking for node with given value
     value < root.data ? find(value, root.left) : find(value, root.right)
   end
@@ -256,19 +254,20 @@ class Tree
 
   # accepts a node and returns its height. Returns -1 if node doesn't exist
   # height: number of edges from a node to the lowest leaf in its subtree
-
-  def height(node = root)
-    # Check if parameter is a node that exists in tree
-    unless node.nil?
-      node = (node.instance_of?(Node) ? find(node.data) : find(node))
-    end
-
+  def height(node = @root, count = -1)
     # Base Case
-    return -1 if node.nil?
+    return count if node.nil?
+
+    unless node.instance_of?(Node)
+      node = find(node)
+    end 
+
+    # Increment count
+    count += 1
 
     # Drill down left side and right side of tree using recursion
     # Return to top of tree while returning count of levels, retrun the higher level count
-    [height(node.left), height(node.right)].max + 1
+    [height(node.left, count), height(node.right, count)].max
   end
 
   # Check if tree is balanced
@@ -277,11 +276,8 @@ class Tree
     left_height = height(root.left) + 1
     right_height = height(root.right) + 1
 
-    # Check height difference
-    difference = right_height - left_height
-
     # If height difference is greater than 1 or less than -1, then tree is NOT balanced
-    difference > 1 || difference < -1 ? false : true
+    (left_height - right_height).between?(-1,1)
   end
 
   # Rebalance BST
