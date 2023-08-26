@@ -120,7 +120,7 @@ class Tree
     end
   end
 
-  #Return node with the given value
+  # Return node with the given value
   def find(value, root = @root)
     # Node with given value does not exist, return nil
     return nil if root.nil?
@@ -283,6 +283,12 @@ class Tree
     # If height difference is greater than 1 or less than -1, then tree is NOT balanced
     difference > 1 || difference < -1 ? false : true
   end
+
+  # Rebalance BST
+  def rebalance
+    data = inorder()
+    @root = build_tree(data)
+  end 
 end 
 
 
@@ -291,6 +297,10 @@ arr = [20,30,40,50,60,70,80,90]
 tree = Tree.new(arr)
 
 tree.insert(10)
+
+tree.pretty_print
+
+tree.rebalance
 
 tree.pretty_print
 
