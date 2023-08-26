@@ -125,7 +125,7 @@ class Tree
     # Node with given value does not exist, return nil
     return nil if root.nil?
     # Node with given value has been found, return the node
-    return root if root.data == value
+    return root if root.<=>(value) == 0
     # Traverse tree looking for node with given value
     value < root.data ? find(value, root.left) : find(value, root.right)
   end
@@ -253,17 +253,45 @@ class Tree
     # Function has return to root, tree has been traversed
     return output 
   end 
+
+  # accepts a node and returns its height. Returns -1 if node doesn't exist
+  # height: number of edges from a node to the lowest leaf in its subtree
+
+  def height(node = root)
+    # Check if parameter is a node that exists in tree
+    unless node.nil?
+      node = (node.instance_of?(Node) ? find(node.data) : find(node))
+    end
+
+    # Base Case
+    return -1 if node.nil?
+
+    # Drill down left side and right side of tree using recursion
+    # Return to top of tree while returning count of levels, retrun the higher level count
+    [height(node.left), height(node.right)].max + 1
+  end
+
+  # Check if tree is balanced
+  def balanced?(root = @root)
+    # Check height of each side of tree
+    left_height = height(root.left) + 1
+    right_height = height(root.right) + 1
+
+    # Check height difference
+    difference = right_height - left_height
+
+    # If height difference is greater than 1 or less than -1, then tree is NOT balanced
+    difference > 1 || difference < -1 ? false : true
+  end
 end 
 
 
-arr = [20,30,40,50,60,70,80]
+arr = [20,30,40,50,60,70,80,90]
 
 tree = Tree.new(arr)
 
+tree.insert(10)
+
 tree.pretty_print
 
-r = Proc.new {|node| node.data * 2}
-
-p = tree.postorder{ |root| puts root.data}
-p p
-
+p tree.balanced?
